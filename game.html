@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenme Gösterge Paneli</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #7a0b0b 0%, #d66320 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .progress-section {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .progress-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, #e8f5e8);
+            width: 75%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .search-section {
+            margin-bottom: 40px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            background: #f8f9fa;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus {
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .search-bar::placeholder {
+            color: #95a5a6;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .card-1 .card-icon { background: linear-gradient(135deg, #FF6B6B, #FF8E8E); }
+        .card-2 .card-icon { background: linear-gradient(135deg, #4ECDC4, #44A08D); }
+        .card-3 .card-icon { background: linear-gradient(135deg, #45B7D1, #96C93D); }
+        .card-4 .card-icon { background: linear-gradient(135deg, #F39C12, #E67E22); }
+        .card-5 .card-icon { background: linear-gradient(135deg, #9B59B6, #8E44AD); }
+        .card-6 .card-icon { background: linear-gradient(135deg, #E74C3C, #C0392B); }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hadi Birlikte Öğrenelim !</h1>
+            <p>Konuları daha interaktif keşfediyoruz</p>
+        </div>
+
+        
+        <div class="search-section">
+            <input type="text" class="search-bar" placeholder="Konu, ders veya kazanım arayın...">
+        </div>
+
+        <div class="cards-grid">
+            <a href="#" class="card card-1" onclick="openLink('https://claude.ai/public/artifacts/b39ba1fa-540f-45d9-bf1f-3e4183ecb247')">
+                <div class="card-icon">📊</div>
+                <div class="card-title">Harddisk nedir?</div>
+                <div class="card-description">Sayılar, geometri ve problem çözme becerilerinizi geliştirin</div>
+            </a>
+
+            <a href="#" class="card card-2" onclick="openLink('https://claude.ai/public/artifacts/27c69aba-a7a0-4217-ada0-7ddf48bfc7fb')">
+                <div class="card-icon">🖲️</div>
+                <div class="card-title">RAM Nedir?</div>
+                <div class="card-description">Doğa olaylarını keşfedin ve bilimsel düşünme becerilerinizi artırın</div>
+            </a>
+
+            <a href="#" class="card card-3" onclick="openLink('https://claude.ai/public/artifacts/c35890cf-07b4-4b16-945e-64128a5498e0')">
+                <div class="card-icon">💻</div>
+                <div class="card-title">İşlemci Nedir?</div>
+                <div class="card-description">Dil becerilerinizi geliştirin ve edebi eserleri keşfedin</div>
+            </a>
+
+            <a href="#" class="card card-4" onclick="openLink('https://claude.ai/public/artifacts/d71719e4-dc14-4a6a-b120-ad8d57871401')">
+                <div class="card-icon">🧠</div>
+                <div class="card-title">Anakart Nedir?</div>
+                <div class="card-description">Tarih, coğrafya ve toplum bilgisini öğrenin</div>
+            </a>
+
+            <a href="#" class="card card-5" onclick="openLink('https://claude.ai/public/artifacts/61f0a92a-a9df-41e3-9784-d4363953cc67')">
+                <div class="card-icon">➗</div>
+                <div class="card-title">Algoritmik İfadeler Oyunu</div>
+                <div class="card-description">Yaratıcılığınızı keşfedin ve sanatsal becerilerinizi geliştirin</div>
+            </a>
+
+            <a href="#" class="card card-6" onclick="openLink('https://claude.ai/public/artifacts/367d0f1b-2a7d-408a-b48b-207e9787144f')">
+                <div class="card-icon">🤖</div>
+                <div class="card-title">AlgoRobot İle Bilişim Oyunu</div>
+                <div class="card-description">Müzik teorisini öğrenin ve enstrüman çalmaya başlayın</div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function openLink(url) {
+            window.open(url, '_blank');
+            return false;
+        }
+
+        // Arama fonksiyonu
+        const searchBar = document.querySelector('.search-bar');
+        const cards = document.querySelectorAll('.card');
+
+        searchBar.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const description = card.querySelector('.card-description').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // İlerleme barı animasyonu
+        window.addEventListener('load', function() {
+            const progressFill = document.querySelector('.progress-fill');
+            progressFill.style.width = '0%';
+            
+            setTimeout(() => {
+                progressFill.style.width = '75%';
+            }, 500);
+        });
+    </script>
+</body>
+</html>

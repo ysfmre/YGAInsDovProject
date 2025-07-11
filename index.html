@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>🚀 YGA Eğitsel Başlatıcı</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Comic Sans MS', 'Segoe UI', cursive;
+      background: 
+        linear-gradient(rgba(253, 216, 53, 0.5), rgba(240, 98, 146, 0.5)),
+        url('görsel1.jpg') no-repeat center center;
+      background-size: cover;
+    }
+
+    .container {
+      text-align: center;
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      animation: popIn 0.6s ease;
+    }
+
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease;
+    }
+
+    .logo-container img {
+      max-height: 120px;
+      width: auto;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 20px 30px;
+      font-size: 20px;
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      text-decoration: none;
+      min-width: 250px;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background-color: #0097a7;
+      transform: scale(1.05);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <img src="YGAlogo.png" alt="YGA Logo">
+    </div>
+    <h1>🎮 Hazırsan Başlayalım!</h1>
+    <div class="button-container">
+      <a href="http://127.0.0.1:5000" class="btn">🎲 Quiz Üretici</a>
+      <a href="game.html" class="btn">🧠 İnteraktif İçerikler</a>
+    </div>
+  </div>
+</body>
+</html>

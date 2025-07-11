@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MEB Eğitsel Oyun Üretici</title>
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0950d, #9e0909);
+      color: #fff;
+      min-height: 100vh;
+      padding-top: 30px;
+      transition: background 0.5s ease;
+    }
+    .logo-container {
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeIn 1s ease;
+    }
+    .logo-container img {
+      max-height: 80px;
+    }
+    h1 {
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .card-custom {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      backdrop-filter: blur(5px);
+      animation: fadeInUp 0.7s ease;
+    }
+    .form-select, .btn-primary, .btn-success {
+      border-radius: 10px;
+      min-height: 48px;
+      font-size: 1em;
+    }
+    .btn-primary {
+      background: linear-gradient(45deg, #08e488, #065fe4);
+      border: none;
+      font-weight: 600;
+    }
+    .btn-success {
+      background: linear-gradient(45deg, #4CAF50, #8BC34A);
+      border: none;
+      font-weight: 600;
+    }
+    .btn-primary:hover, .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .game-output, #quiz-container {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      color: #fff;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      animation: fadeIn 0.8s ease;
+    }
+    .footer {
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      margin-top: 50px;
+      font-size: 0.9em;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <img src="{{ url_for('static', filename='YGAlogo.png') }}" alt="YGA Logo">
+    </div>
+
+    <h1>🎮 MEB Kazanımlarına Yönelik Eğitsel Oyun Üretici</h1>
+
+    <form method="post" class="card-custom mb-4" id="gameForm">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="sinif" class="form-label">Sınıf Seçin</label>
+          <select id="sinif" name="sinif" class="form-select" required>
+            <option value="">Sınıf Seçin</option>
+            {% for s, k in konular|groupby("0") %}
+              <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="konu" class="form-label">Konu Seçin</label>
+          <select id="konu" name="konu" class="form-select" required>
+            <option value="">Konu Seçin</option>
+            {% for sinif, konu in konular %}
+              <option value="{{ konu }}" data-sinif="{{ sinif }}">{{ konu }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="mt-3 text-center">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <span id="btnText">🎯 Oyun Üret</span>
+        </button>
+      </div>
+    </form>
+
+    {% if oyun %}
+    <div id="quiz-container">
+      <h3>{{ oyun.oyun_adi }}</h3>
+      <p>{{ oyun.aciklama }}</p>
+      <div id="quiz-questions">
+        {% for soru in oyun.sorular %}
+          <div class="mb-4 question" data-answer="{{ soru.cevap }}">
+            <h5>{{ soru.soru }}</h5>
+            <div class="row">
+              {% for secenek in soru.secenekler %}
+              <div class="col-md-6">
+                <button class="btn btn-light w-100 answer-btn mb-2">{{ secenek }}</button>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div id="quiz-result" class="mt-4" style="display:none;">
+        <h4>✅ Tüm soruları tamamladınız!</h4>
+        <p id="score"></p>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if selected_konu %}
+      <div class="alert alert-info mt-3 text-center">
+        <strong>{{ selected_konu[0] }} - {{ selected_konu[1] }}</strong> için oyun oluşturuldu.
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="footer">
+    © 2025 MEB Kazanımlarına Yönelik Eğitsel Oyun Üretici
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const sinifSelect = document.getElementById("sinif");
+    const konuSelect = document.getElementById("konu");
+    const gameForm = document.getElementById("gameForm");
+    const btnText = document.getElementById("btnText");
+
+    sinifSelect.addEventListener("change", function() {
+      const selectedSinif = this.value;
+      konuSelect.value = "";
+      for (const option of konuSelect.options) {
+        if (!option.dataset.sinif) continue;
+        option.style.display = (option.dataset.sinif === selectedSinif) ? "block" : "none";
+      }
+      konuSelect.selectedIndex = 0;
+    });
+
+    gameForm.addEventListener("submit", function() {
+      btnText.textContent = "⏳ Yükleniyor...";
+    });
+
+    document.addEventListener("DOMContentLoaded", function(){
+      const answerButtons = document.querySelectorAll(".answer-btn");
+      let correctCount = 0;
+      let totalQuestions = document.querySelectorAll(".question").length;
+
+      answerButtons.forEach(btn => {
+        btn.addEventListener("click", function(){
+          const questionDiv = this.closest(".question");
+          const correctAnswer = questionDiv.dataset.answer;
+          const allBtns = questionDiv.querySelectorAll(".answer-btn");
+
+          allBtns.forEach(b => b.disabled = true);
+
+          if(this.textContent.trim() === correctAnswer.trim()){
+            this.classList.add("btn-success");
+            correctCount++;
+          } else {
+            this.classList.add("btn-danger");
+            allBtns.forEach(b => {
+              if(b.textContent.trim() === correctAnswer.trim()){
+                b.classList.add("btn-success");
+              }
+            });
+          }
+
+          const remaining = document.querySelectorAll(".question .answer-btn:not(:disabled)");
+          if(remaining.length === 0){
+            document.getElementById("quiz-result").style.display = "block";
+            document.getElementById("score").textContent = `Toplam Doğru: ${correctCount} / ${totalQuestions}`;
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

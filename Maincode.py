@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # OpenAI istemcisi
-client = OpenAI(api_key=("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"))
+client = OpenAI(api_key=(""))
 
 app = Flask(__name__)
 
